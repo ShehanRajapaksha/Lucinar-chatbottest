@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .chat-bubble {
+    @apply rounded-lg px-4 py-2 max-w-xs break-words;
+  }
+
+  .chat-bubble-user {
+    @apply chat-bubble bg-blue-500 text-white ml-auto;
+  }
+
+  .chat-bubble-bot {
+    @apply chat-bubble bg-gray-200 text-gray-800 mr-auto;
+  }
+}
