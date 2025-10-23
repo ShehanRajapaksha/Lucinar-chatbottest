@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Message, ChatResponse } from '@/types/chatbot';
+import { Message, ChatResponse, WebhookResponse } from '@/types/chatbot';
 import ChatMessage from './ChatMessage';
 import ChatLoader from './ChatLoader';
+import { log } from 'node:console';
 
 interface ChatbotProps {
   webhookUrl: string;
@@ -45,38 +46,27 @@ export default function Chatbot({ webhookUrl }: ChatbotProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage.text }),
+        body: JSON.stringify({ 
+          message: userMessage.text,
+          userId: "ABCD1" // hardcoded as requested
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response from webhook');
+       console.log(response)
       }
 
-      const data = await response.json();
-      
-      // Destructure the response - handle both string and structured responses
-      let chatResponse: ChatResponse;
-      
-      if (typeof data === 'string') {
-        chatResponse = { text: data };
-      } else if (data.text || data.message) {
-        chatResponse = {
-          text: data.text || data.message,
-          products: data.products,
-        };
-      } else {
-        chatResponse = {
-          text: JSON.stringify(data),
-          products: data.products,
-        };
-      }
+      // The API route handles the JSON parsing, so we can directly get the data
+      const webhookData: WebhookResponse = await response.json();
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: chatResponse.text,
+        text: webhookData.message,
         sender: 'bot',
         timestamp: new Date(),
-        products: chatResponse.products,
+        products: webhookData.products_mentioned && webhookData.products_mentioned.length > 0 
+          ? webhookData.products_mentioned 
+          : undefined,
       };
 
       setMessages((prev) => [...prev, botMessage]);

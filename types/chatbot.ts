@@ -1,14 +1,29 @@
 // Type definitions for chatbot messages and products
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
-  price?: number;
-  currency?: string;
-  image?: string;
-  url?: string;
-  [key: string]: any; // Allow additional properties
+  slug: string;
+  price: number;
+  regular_price: number;
+  purchasable: boolean;
+  total_sales: number;
+  stock_status: string;
+  categories: string;
+  description: string;
+  permalink: string;
+  image_url: string;
+  created_at: string | null;
+}
+
+export interface WebhookResponse {
+  message: string;
+  products_mentioned: Product[];
+  intent: string;
+  sentiment: string;
+  confidence: string;
+  needs_human: boolean;
+  next_action: string;
 }
 
 export interface Message {

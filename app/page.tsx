@@ -1,9 +1,8 @@
 import Chatbot from '@/components/Chatbot';
 
 export default function Home() {
-  // Use the local API route as the webhook URL
-  // In production, you would replace this with your actual webhook URL
-  const webhookUrl = '/api/webhook';
+  // Use the local API route to bypass CORS issues
+  const webhookUrl = '/api/chat';
 
   return (
     <main>
